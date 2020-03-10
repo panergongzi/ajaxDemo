@@ -1,0 +1,64 @@
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    var url = "http://localhost:8073/test.json";
+    // 方式一 使用原生XHR发送请求
+    function XHRAjax(url, type = "get", params) {
+        var xhr = new XMLHttpRequest();//创建啊一个XMLHttpRequest()实例
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr == 304) {
+                    console.log(xhr.responseText)
+                } else {
+                    console.log("request is fail" + xhr.status)
+                }
+            }
+        }
+        // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");//设置请求头
+        xhr.open(type, url, true);
+        xhr.send(params);
+    }
+    XHRAjax(url)
+    //方式二 使用jquery ajax写法
+    function JQAjax(url, type = "get", params) {
+        $.ajax({
+            type: type,
+            data: params,
+            contentType: 'application/x-www-form-urlencoded',
+            url: url,
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (err) {
+                console.log(err)
+            }
+        })
+
+    }
+    JQAjax(url)
+    //方式三 使用axios写法
+    async function axiosAjax(url, type = "get", params) {
+        var re = await axios({
+            url: url,
+            data: params,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            method: type
+        })   
+        return re;
+    }
+    axiosAjax(url)
+    //方式四 使用fetch写法
+    async function fetchAjax(url, type = "get", params) {
+        var response = await fetch(url, {
+            method: type,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params
+        })
+        var re=await response.json;
+        return re;
+    }
+    fetchAjax(url)
+
+</script>
